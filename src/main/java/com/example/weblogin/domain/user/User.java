@@ -24,7 +24,8 @@ public class User {
     private String password;
     private String name;
     private String email;
-
+    private String address;
+    private String phone;
     private String role; // 권한
 
     private LocalDateTime createDate; // 날짜

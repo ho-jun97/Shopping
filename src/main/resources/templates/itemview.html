@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -32,14 +32,26 @@
                         <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
                     </ul>
                 </li>
-                <li class="nav-item"><a class="nav-link" href="/item/upload">Resister</a></li>
+                <!--                        <li class="nav-item"><a class="nav-link" href="/item/upload" sec:authorize="hasRole('ROLE_USER')">Resister</a></li>-->
             </ul>
-            <form th:action="@{/signin}">
+            <form th:action="@{/signin}" sec:authorize="!isAuthenticated()">
                 <button class="btn btn-outline-dark" type="submit">
                     로그인
                 </button>
             </form>
-            <form class="d-flex">
+            <form th:action="@{/signup}" sec:authorize="!isAuthenticated()">
+                <button class="btn btn-outline-dark" type="submit">
+                    회원가입
+                </button>
+            </form>
+            <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()" >
+                <span class="text-black" sec:authentication="name">사용자</span>
+                <a class="btn btn-outline-dark" href="/item/upload" sec:authorize="hasRole('ROLE_SELLER')" >Resister</a>
+                <button class="btn btn-outline-dark" type="submit">
+                    로그아웃
+                </button>
+            </form>
+            <form class="d-flex" sec:authorize="hasRole('ROLE_USER')">
                 <button class="btn btn-outline-dark" type="submit">
                     <i class="bi-cart-fill me-1"></i>
                     Cart
@@ -67,9 +79,9 @@
                         Add to cart
                     </button>
                 </div>
-                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                    <div class="text-center"><a class="btn btn-outline-dark mt-auto" th:href="@{/item/modify/{id}(id=${item.id})}">수정</a></div>
-                    <div class="text-center"><a class="btn btn-outline-dark mt-auto" th:href="@{/item/delete/{id}(id=${item.id})}">삭제</a></div>
+                <div class="footer" sec:authorize="hasRole('ROLE_SELLER')">
+                    <a class="btn btn-outline-dark mt-auto" th:href="@{/item/modify/{id}(id=${item.id})}">수정</a>
+                    <a class="btn btn-outline-dark mt-auto" th:href="@{/item/delete/{id}(id=${item.id})}">삭제</a>
                 </div>
             </div>
         </div>
