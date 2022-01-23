@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head(title)">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title th:text="${title}">Shop Homepage - Start Bootstrap Template</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="/css/styles.css" rel="stylesheet" />
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="menu(user)">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="#!">Ho Shop</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="/index" sec:authorize="isAuthenticated()">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="/" sec:authorize="!isAuthenticated()">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="#!">All Products</a></li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li><a class="dropdown-item" href="#!">Popular Items</a></li>
+                            <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
+                        </ul>
+                    </li>
+                    <!--                        <li class="nav-item"><a class="nav-link" href="/item/upload" sec:authorize="hasRole('ROLE_USER')">Resister</a></li>-->
+                </ul>
+                <form th:action="@{/signin}" sec:authorize="!isAuthenticated()">
+                    <button class="btn btn-outline-dark" type="submit">
+                        로그인
+                    </button>
+                </form>
+                <form th:action="@{/signup}" sec:authorize="!isAuthenticated()">
+                    <button class="btn btn-outline-dark" type="submit">
+                        회원가입
+                    </button>
+                </form>
+                <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()" >
+                    <span class="text-black" sec:authentication="name">사용자</span>
+                    <a class="btn btn-outline-dark" th:href="@{/seller/{id}(id=${user.id})}" sec:authorize="hasRole('ROLE_SELLER')">마이페이지</a>
+                    <a class="btn btn-outline-dark" th:href="@{/user/{id}(id=${user.id})}" sec:authorize="hasRole('ROLE_USER')">마이페이지</a>
+                    <a class="btn btn-outline-dark" href="/item/upload" sec:authorize="hasRole('ROLE_SELLER')"  >Resister</a>
+                    <button class="btn btn-outline-dark" type="submit">
+                        로그아웃
+                    </button>
+                </form>
+                <form class="d-flex" sec:authorize="hasRole('ROLE_USER')" th:action="@{/user/{id}/cart(id=${user.id})}">
+                    <button class="btn btn-outline-dark" type="submit">
+                        <i class="bi-cart-fill me-1"></i>
+                        Cart
+                        <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse" th:fragment="sidemenu(user)">
+        <div class="position-sticky pt-3">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" th:href="@{/seller/{id}(id=${user.id})}">
+                        <span data-feather="home"></span>
+                        Information
+                    </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('ROLE_SELLER')">
+                    <a class="nav-link" th:href="@{/seller/{id}/salelist(id=${user.id})}">
+                        <span data-feather="file"></span>
+                        Sale
+                    </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('ROLE_USER')">
+                    <a class="nav-link" th:href="@{/user/{id}/cart(id=${user.id})}">
+                        <span data-feather="file"></span>
+                        Cart
+                    </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('ROLE_USER')">
+                    <a class="nav-link" th:href="@{/seller/{id}/salelist(id=${user.id})}">
+                        <span data-feather="file"></span>
+                        Order
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <span data-feather="shopping-cart"></span>
+                        Products
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    </body>
+</html>

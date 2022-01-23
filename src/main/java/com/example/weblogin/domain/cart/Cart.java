@@ -1,4 +1,4 @@
-package com.example.weblogin.domain.item;
+package com.example.weblogin.domain.cart;
 
 import com.example.weblogin.domain.cart_item.Cart_item;
 import com.example.weblogin.domain.user.User;
@@ -15,34 +15,21 @@ import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-
 @Getter
 @Setter
-public class Item {
+@Entity
+public class Cart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id; // 고유 id
+    private int id;
 
-    private String name; // 상품 이름
-
-    private int price; // 상품 가격
-
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch =  FetchType.EAGER)
     @JoinColumn(name="user_id")
-    private User user;
+    User user;
 
-    @OneToMany(mappedBy = "item")
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "cart")
     private List<Cart_item> cart_items = new ArrayList<>();
-
-    private boolean isSoldOut; // 판매 여부
-
-    private int count; // 팔린 개수
-
-    private int stock; // 상품 재고
-
-    private String text; // 상품 설명
 
     @DateTimeFormat(pattern = "yyyy-mm-dd")
     private LocalDate createDate;
@@ -51,5 +38,4 @@ public class Item {
     public void createDate(){
         this.createDate = LocalDate.now();
     }
-
 }

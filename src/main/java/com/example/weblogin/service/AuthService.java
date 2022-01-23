@@ -1,5 +1,7 @@
 package com.example.weblogin.service;
 
+import com.example.weblogin.domain.cart.Cart;
+import com.example.weblogin.domain.cart.CartRepository;
 import com.example.weblogin.domain.user.User;
 import com.example.weblogin.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,13 +15,17 @@ import javax.transaction.Transactional;
 public class AuthService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final CartRepository cartRepository;
 
     @Transactional // Write(Insert, Update, Delete)
     public User signup(User user) {
         String rawPassword = user.getPassword();
         String encPassword = bCryptPasswordEncoder.encode(rawPassword);
         user.setPassword(encPassword);
-//        user.setRole("ROLE_USER");;
+        Cart cart = new Cart();
+        cart.setUser(user);
+        cartRepository.save(cart);
+        user.setCart(cart);
 
         User userEntity = userRepository.save(user);
         return userEntity;
