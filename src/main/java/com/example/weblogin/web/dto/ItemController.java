@@ -44,14 +44,9 @@ public class ItemController {
 
     // 수정 폼
     @GetMapping("item/modify/{id}")
-    public String itemModify(Model model,@PathVariable("id") Integer id,
-                             @AuthenticationPrincipal PrincipalDetails principalDetails){
-        if(itemService.getItem(id).getUser().getId() == principalDetails.getUser().getId()) {
+    public String itemModify(Model model,@PathVariable("id") Integer id){
             model.addAttribute("item", itemService.getItem(id));
             return "itemmodify";
-        } else{
-            return "redirect:/item/view?id="+id;
-        }
     }
 
     // 수정 업데이트
@@ -68,11 +63,9 @@ public class ItemController {
 
     // 상품 삭제
     @GetMapping("item/delete/{id}")
-    public String itemDelete(@PathVariable("id") Integer id, @AuthenticationPrincipal PrincipalDetails principalDetails){
-        if(itemService.getItem(id).getUser().getId() == principalDetails.getUser().getId()) {
-            itemService.deleteItem(id);
-            return "redirect:/index";
-        }
-        return "redirect:/item/view?id="+id;
+    public String itemDelete(@PathVariable("id") Integer id){
+        itemService.deleteItem(id);
+
+        return "redirect:/index";
     }
 }

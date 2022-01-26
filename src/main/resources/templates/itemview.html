@@ -29,7 +29,7 @@
                         </button>
                     </form>
                 </div>
-                <div class="footer" sec:authorize="hasRole('ROLE_SELLER')">
+                <div class="footer" sec:authorize="hasRole('ROLE_SELLER')" th:if="${item.user.id} == ${user.id}">
                     <a class="btn btn-outline-dark mt-auto" th:href="@{/item/modify/{id}(id=${item.id})}">수정</a>
                     <a class="btn btn-outline-dark mt-auto" th:href="@{/item/delete/{id}(id=${item.id})}">삭제</a>
                 </div>

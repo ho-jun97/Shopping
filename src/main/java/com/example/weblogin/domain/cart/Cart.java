@@ -24,7 +24,7 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @OneToOne(fetch =  FetchType.EAGER)
+    @OneToOne(fetch =  FetchType.EAGER) // lazy
     @JoinColumn(name="user_id")
     User user;
 

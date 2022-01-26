@@ -54,12 +54,12 @@ public class MyPageController {
         model.addAttribute("user",user);
         return "mypage";
     }
+    // 구매자 카트목록
     @GetMapping("user/{id}/cart")
     public String userCart(@PathVariable("id") Integer id, Model model, @AuthenticationPrincipal PrincipalDetails principalDetails){
         User user = principalDetails.getUser();
         Cart userCart = user.getCart();
         List<Cart_item> cart_items = userCart.getCart_items();
-
         model.addAttribute("cartItems", cart_items);
         model.addAttribute("user", user);
         return "usercart";
@@ -79,13 +79,12 @@ public class MyPageController {
     public String deleteCartItem(@PathVariable("id") Integer id, @PathVariable("cart_itemId") Integer cart_itemId,Model model,
                                  @AuthenticationPrincipal PrincipalDetails principalDetails){
         cartService.deleteCart_item(cart_itemId);
-//        User user = principalDetails.getUser();
-//        Cart cart = user.getCart();
-//
-//        List<Cart_item> cart_items = cart.getCart_items();
-//
-//        cart_items.remove(itemService.getItem(cart_itemId));
+        User user = principalDetails.getUser();
+        Cart cart = user.getCart();
 
-        return "redirect:/user/{id}/cart";
+        List<Cart_item> cart_items = cart.getCart_items();
+        Cart_item cart_item = cartService.getCart_item(cart_itemId);
+        cart_items.remove(cart_item);
+        return "usercart";
     }
 }

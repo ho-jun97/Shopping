@@ -22,11 +22,12 @@ public class AuthService {
         String rawPassword = user.getPassword();
         String encPassword = bCryptPasswordEncoder.encode(rawPassword);
         user.setPassword(encPassword);
-        Cart cart = new Cart();
-        cart.setUser(user);
-        cartRepository.save(cart);
-        user.setCart(cart);
-
+        if (user.getRole().equals("ROLE_USER")){
+            Cart cart = new Cart();
+            cart.setUser(user);
+            cartRepository.save(cart);
+            user.setCart(cart);
+        }
         User userEntity = userRepository.save(user);
         return userEntity;
     }

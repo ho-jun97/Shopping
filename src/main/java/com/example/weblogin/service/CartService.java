@@ -35,6 +35,10 @@ public class CartService {
             cart_itemRepository.save(cart_item);
         }
     }
+    public Cart_item getCart_item(int id){
+        return cart_itemRepository.findById(id).get();
+    }
+
 
     public void deleteCart_item(int id){
         cart_itemRepository.deleteById(id);
