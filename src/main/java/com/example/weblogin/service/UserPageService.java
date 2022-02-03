@@ -27,4 +27,10 @@ public class UserPageService {
         }
         return list;
     }
+
+    public void chargeMoney(int id, int money){
+        User user = userRepository.findById(id).get();
+        user.setMoney(user.getMoney()+money);
+        userRepository.save(user);
+    }
 }

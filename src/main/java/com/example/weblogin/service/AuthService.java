@@ -28,6 +28,7 @@ public class AuthService {
             cartRepository.save(cart);
             user.setCart(cart);
         }
+        user.setMoney(0);
         User userEntity = userRepository.save(user);
         return userEntity;
     }

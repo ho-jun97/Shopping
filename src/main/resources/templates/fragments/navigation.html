@@ -23,7 +23,6 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
                     <li class="nav-item"><a class="nav-link active" aria-current="page" href="/index" sec:authorize="isAuthenticated()">Home</a></li>
                     <li class="nav-item"><a class="nav-link active" aria-current="page" href="/" sec:authorize="!isAuthenticated()">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -47,18 +46,20 @@
                 </form>
                 <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()" >
                     <span class="text-black" sec:authentication="name">사용자</span>
+                    <a class="btn btn-outline-dark" th:href="@{/user/{id}/chargeForm(id=${user.id})}" th:text="${user.money} +' 원'"></a>
                     <a class="btn btn-outline-dark" th:href="@{/seller/{id}(id=${user.id})}" sec:authorize="hasRole('ROLE_SELLER')">마이페이지</a>
                     <a class="btn btn-outline-dark" th:href="@{/user/{id}(id=${user.id})}" sec:authorize="hasRole('ROLE_USER')">마이페이지</a>
                     <a class="btn btn-outline-dark" href="/item/upload" sec:authorize="hasRole('ROLE_SELLER')"  >Resister</a>
                     <button class="btn btn-outline-dark" type="submit">
                         로그아웃
+
                     </button>
                 </form>
                 <form class="d-flex" sec:authorize="hasRole('ROLE_USER')" th:action="@{/user/{id}/cart(id=${user.id})}">
                     <button class="btn btn-outline-dark" type="submit">
                         <i class="bi-cart-fill me-1"></i>
                         Cart
-                        <span class="badge bg-dark text-white ms-1 rounded-pill" >0</span>
+                        <span class="badge bg-dark text-white ms-1 rounded-pill" th:text="${user.cart.cart_items.size()}">0</span>
                     </button>
                 </form>
             </div>
@@ -71,31 +72,31 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" th:href="@{/seller/{id}(id=${user.id})}">
                         <span data-feather="home"></span>
-                        Information
+                        내 정보
                     </a>
                 </li>
                 <li class="nav-item" sec:authorize="hasRole('ROLE_SELLER')">
                     <a class="nav-link" th:href="@{/seller/{id}/salelist(id=${user.id})}">
                         <span data-feather="file"></span>
-                        Sale
+                        판매
                     </a>
                 </li>
                 <li class="nav-item" sec:authorize="hasRole('ROLE_USER')">
                     <a class="nav-link" th:href="@{/user/{id}/cart(id=${user.id})}">
                         <span data-feather="file"></span>
-                        Cart
+                        카트
                     </a>
                 </li>
                 <li class="nav-item" sec:authorize="hasRole('ROLE_USER')">
                     <a class="nav-link" th:href="@{/seller/{id}/salelist(id=${user.id})}">
                         <span data-feather="file"></span>
-                        Order
+                        주문
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">
                         <span data-feather="shopping-cart"></span>
-                        Products
+                        상품
                     </a>
                 </li>
             </ul>

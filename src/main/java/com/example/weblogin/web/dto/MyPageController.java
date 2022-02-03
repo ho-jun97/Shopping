@@ -59,9 +59,13 @@ public class MyPageController {
     public String userCart(@PathVariable("id") Integer id, Model model, @AuthenticationPrincipal PrincipalDetails principalDetails){
         User user = principalDetails.getUser();
         Cart userCart = user.getCart();
-        List<Cart_item> cart_items = userCart.getCart_items();
+        List<Cart_item> cart_items = cartService.getCartItems(userCart.getId());
+        int totalCost = cartService.getTotalCost(cart_items);
+
         model.addAttribute("cartItems", cart_items);
         model.addAttribute("user", user);
+        model.addAttribute("totalCost",totalCost);
+
         return "usercart";
     }
 
@@ -71,6 +75,8 @@ public class MyPageController {
         User user = principalDetails.getUser();
         Item item = itemService.getItem(itemId);
         cartService.addItem(user, item, quantity);
+        List<Cart_item> list = cartService.getCartItems(user.getCart().getId());
+        user.getCart().setCart_items(list);
         return "redirect:/item/view?id=" +itemId;
 
     }
@@ -80,11 +86,30 @@ public class MyPageController {
                                  @AuthenticationPrincipal PrincipalDetails principalDetails){
         cartService.deleteCart_item(cart_itemId);
         User user = principalDetails.getUser();
-        Cart cart = user.getCart();
+        List<Cart_item> list = cartService.getCartItems(user.getCart().getId());
+        user.getCart().setCart_items(list);
 
-        List<Cart_item> cart_items = cart.getCart_items();
-        Cart_item cart_item = cartService.getCart_item(cart_itemId);
-        cart_items.remove(cart_item);
-        return "usercart";
+        return "redirect:/user/{id}/cart";
+    }
+
+    // 충전 폼
+    @GetMapping("user/{id}/chargeForm")
+    public String charge(@PathVariable("id") Integer id, Model model,
+                         @AuthenticationPrincipal PrincipalDetails principalDetails){
+        if(principalDetails.getUser().getId() == id) {
+            User user = userPageService.findUser(id);
+            model.addAttribute("user", user);
+            return "charge";
+        }else{
+            return "redirect:/index";
+        }
+    }
+
+    // 충전 진행
+    @PostMapping("user/{id}/chargePro")
+    public String chargePro(int money, @PathVariable("id") Integer id){
+        userPageService.chargeMoney(id, money);
+
+        return "redirect:/index";
     }
 }

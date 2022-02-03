@@ -1,6 +1,7 @@
 package com.example.weblogin.domain.item;
 
 import com.example.weblogin.domain.cart_item.Cart_item;
+import com.example.weblogin.domain.order_item.Order_item;
 import com.example.weblogin.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,6 +36,9 @@ public class Item {
 
     @OneToMany(mappedBy = "item")
     private List<Cart_item> cart_items = new ArrayList<>();
+
+    @OneToMany(mappedBy = "item")
+    private List<Order_item> order_items = new ArrayList<>();
 
     private boolean isSoldOut; // 판매 여부
 
