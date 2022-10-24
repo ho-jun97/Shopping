@@ -5,6 +5,7 @@ import com.example.weblogin.domain.cart_item.Cart_item;
 import com.example.weblogin.domain.user.User;
 import com.example.weblogin.service.CartService;
 import com.example.weblogin.service.OrderService;
+import com.example.weblogin.service.UserPageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -20,11 +21,12 @@ import java.util.List;
 public class OrderController {
     private final OrderService orderService;
     private final CartService cartService;
+    private final UserPageService userPageService;
 
     @GetMapping("user/{id}/order")
     public String orderForm(@PathVariable("id") Integer id, Model model,
                             @AuthenticationPrincipal PrincipalDetails principalDetails){
-        User user = principalDetails.getUser();
+        User user = userPageService.findUser(id);
         List<Cart_item> cart_items = cartService.getCartItems(user.getCart().getId());
         int totalCost = cartService.getTotalCost(cart_items);
 
@@ -37,10 +39,10 @@ public class OrderController {
     @PostMapping("user/{id}/orderPro")
     public String orderPro(@PathVariable("id") Integer id, Model model,
                            @AuthenticationPrincipal PrincipalDetails principalDetails){
-        User user = principalDetails.getUser();
+        User user = userPageService.findUser(id);
         List<Cart_item> cart_items = cartService.getCartItems(user.getCart().getId());
         int totalCost = cartService.getTotalCost(cart_items);
-        cartService.payment(totalCost,user,cart_items);
+        cartService.payment(totalCost,user);
         return "redirect:/user/{id}/cart";
     }
 }

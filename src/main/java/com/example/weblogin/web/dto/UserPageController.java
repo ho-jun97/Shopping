@@ -5,11 +5,11 @@ import com.example.weblogin.domain.cart.Cart;
 import com.example.weblogin.domain.cart_item.Cart_item;
 import com.example.weblogin.domain.item.Item;
 import com.example.weblogin.domain.user.User;
+import com.example.weblogin.domain.user.UserRepository;
 import com.example.weblogin.service.CartService;
 import com.example.weblogin.service.ItemService;
 import com.example.weblogin.service.UserPageService;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.PackagePrivate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,36 +17,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
-public class MyPageController {
+public class UserPageController {
 
     private final UserPageService userPageService;
-    private final ItemService itemService;
     private final CartService cartService;
-    //---------------------------------------------------------------------------SellerPage
-    // 판매자 마이페이지
-    @GetMapping("/seller/{id}")
-    public String sellerPage(@PathVariable("id") Integer id, Model model) {
-        User user = userPageService.findUser(id);
-        model.addAttribute("user",user);
-        return "mypage";
-    }
+    private final ItemService itemService;
 
-    // 판매목록
-    @GetMapping("/seller/{id}/salelist")
-    public String salePage(@PathVariable("id")Integer id, Model model){
-        User user = userPageService.findUser(id);
-        List<Item> list = itemService.getItems();
-        List<Item> sellList = userPageService.sellList(user,list);
-        model.addAttribute("user",user);
-        model.addAttribute("sellList",sellList);
-        return "salelist";
-    }
-//---------------------------------------------------------------------------UserPage
     // 구매자 마이페이지
     @GetMapping("user/{id}")
     public String userPage(@PathVariable("id") Integer id, Model model){
@@ -57,7 +37,7 @@ public class MyPageController {
     // 구매자 카트목록
     @GetMapping("user/{id}/cart")
     public String userCart(@PathVariable("id") Integer id, Model model, @AuthenticationPrincipal PrincipalDetails principalDetails){
-        User user = principalDetails.getUser();
+        User user = userPageService.findUser(id);
         Cart userCart = user.getCart();
         List<Cart_item> cart_items = cartService.getCartItems(userCart.getId());
         int totalCost = cartService.getTotalCost(cart_items);
@@ -72,7 +52,7 @@ public class MyPageController {
     @PostMapping("user/{id}/cart/{itemId}")
     public String addCartItem(@PathVariable("id") Integer id, @PathVariable("itemId") Integer itemId, int quantity,
                               @AuthenticationPrincipal PrincipalDetails principalDetails){
-        User user = principalDetails.getUser();
+        User user = userPageService.findUser(id);
         Item item = itemService.getItem(itemId);
         cartService.addItem(user, item, quantity);
         List<Cart_item> list = cartService.getCartItems(user.getCart().getId());
@@ -85,7 +65,7 @@ public class MyPageController {
     public String deleteCartItem(@PathVariable("id") Integer id, @PathVariable("cart_itemId") Integer cart_itemId,Model model,
                                  @AuthenticationPrincipal PrincipalDetails principalDetails){
         cartService.deleteCart_item(cart_itemId);
-        User user = principalDetails.getUser();
+        User user = userPageService.findUser(id);
         List<Cart_item> list = cartService.getCartItems(user.getCart().getId());
         user.getCart().setCart_items(list);
 

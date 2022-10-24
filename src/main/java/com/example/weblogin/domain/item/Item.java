@@ -1,7 +1,6 @@
 package com.example.weblogin.domain.item;
 
 import com.example.weblogin.domain.cart_item.Cart_item;
-import com.example.weblogin.domain.order_item.Order_item;
 import com.example.weblogin.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,15 +29,16 @@ public class Item {
 
     private int price; // 상품 가격
 
+    private String fileName;
+
+    private String filePath;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="user_id")
     private User user;
 
-    @OneToMany(mappedBy = "item")
+    @OneToMany(mappedBy = "item" , cascade = CascadeType.ALL)
     private List<Cart_item> cart_items = new ArrayList<>();
-
-    @OneToMany(mappedBy = "item")
-    private List<Order_item> order_items = new ArrayList<>();
 
     private boolean isSoldOut; // 판매 여부
 

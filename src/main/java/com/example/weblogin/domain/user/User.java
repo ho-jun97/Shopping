@@ -2,7 +2,6 @@ package com.example.weblogin.domain.user;
 
 import com.example.weblogin.domain.cart.Cart;
 import com.example.weblogin.domain.item.Item;
-import com.example.weblogin.domain.order.Order;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -35,14 +34,11 @@ public class User {
     private int money;
 
     // Item 과 연결
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Item> items = new ArrayList<>();
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Cart cart;
-
-    @OneToMany(mappedBy = "user")
-    private List<Order> orders = new ArrayList<>();
 
     @DateTimeFormat(pattern = "yyyy-mm-dd")
     private LocalDate createDate;
@@ -50,5 +46,9 @@ public class User {
     @PrePersist
     public void createDate(){
         this.createDate = LocalDate.now();
+    }
+
+    public void updateMoney(int money){
+        this.money = money;
     }
 }

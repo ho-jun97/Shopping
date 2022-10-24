@@ -16,7 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Controller
 public class ShopController {
-
     private final ItemService itemService;
     private final UserPageService userPageService;
     @GetMapping("/")
@@ -30,7 +29,7 @@ public class ShopController {
     @GetMapping("/index")
     public String home(Model model, @AuthenticationPrincipal PrincipalDetails principalDetails){
         List<Item> itemList = itemService.getItems();
-        User user = principalDetails.getUser();
+        User user = userPageService.findUser(principalDetails.getUser().getId());
         model.addAttribute("user", user);
         model.addAttribute("itemList", itemList);
         return "index";

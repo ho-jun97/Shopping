@@ -30,7 +30,7 @@ public class Cart {
     @JoinColumn(name="user_id")
     User user;
 
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "cart")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "cart", cascade = CascadeType.ALL)
     private List<Cart_item> cart_items = new ArrayList<>();
 
     @DateTimeFormat(pattern = "yyyy-mm-dd")
